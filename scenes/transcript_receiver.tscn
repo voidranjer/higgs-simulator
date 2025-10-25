@@ -2,5 +2,5 @@
 
 [ext_resource type="Script" uid="uid://3pctgfohc706" path="res://scripts/transcript_receiver.gd" id="1_dacx8"]
 
-[node name="TranscriptReceiver" type="Node" unique_id=1854735126]
+[node name="TranscriptReceiver" type="Node"]
 script = ExtResource("1_dacx8")

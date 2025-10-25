@@ -5,6 +5,8 @@ var server = TCPServer.new()
 var connections = []
 const PORT = 9080
 
+signal transcript_received(message: String)
+
 func _ready():
 	# Start listening on the specified port
 	var err = server.listen(PORT)
@@ -82,6 +84,7 @@ func handle_http_request(conn: StreamPeerTCP, request_str: String):
 			if data.has("message"):
 				# SUCCESS: Print the message
 				print("Received message: %s" % data["message"])
+				transcript_received.emit(data["message"])
 				send_response(conn, 200, "OK", '{"status": "received"}')
 			else:
 				print("Request body missing 'message' key.")
