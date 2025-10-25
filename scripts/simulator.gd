@@ -1,13 +1,13 @@
 extends Node2D
 
-@onready var higgs_audio_streamer: HiggsAudioStreamer = $HiggsAudioStreamer
+@onready var walter_streamer: Node = $Waltuh/HiggsAudioStreamer
 @onready var llm_api: LlmApi = $LlmApi
 @onready var transcript_receiver: TranscriptReceiver = $TranscriptReceiver
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	llm_api.message_received.connect(
-		func(voice_line: String): higgs_audio_streamer.speak(voice_line, "walter")
+		func(voice_line: String): walter_streamer.speak(voice_line, "walter")
 	)
 	
 	transcript_receiver.transcript_received.connect(

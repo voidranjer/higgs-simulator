@@ -1,26 +1,32 @@
-[gd_scene load_steps=5 format=3 uid="uid://farwc0kbsdbn"]
+[gd_scene load_steps=8 format=3 uid="uid://farwc0kbsdbn"]
 
 [ext_resource type="Texture2D" uid="uid://bddbsfry1x4t6" path="res://assets/waltuh.png" id="1_fcf1m"]
+[ext_resource type="Script" uid="uid://dovs3nlh4xgtn" path="res://scripts/waltuh.gd" id="1_kfhkg"]
 [ext_resource type="Texture2D" uid="uid://bkvjkrvrksusq" path="res://assets/chatbubble.png" id="2_01hks"]
+[ext_resource type="PackedScene" uid="uid://bb2lnu7nrnv04" path="res://scenes/higgs_audio_streamer.tscn" id="2_lpox2"]
 [ext_resource type="Script" uid="uid://c3rf1nf6u2wgh" path="res://scripts/animated_dotted_label.gd" id="3_x3lla"]
+[ext_resource type="Texture2D" uid="uid://cuoctf8e2p6wb" path="res://assets/mouth.png" id="4_7opfl"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_01hks"]
 font_size = 150
 font_color = Color(0, 0, 0, 1)
 
-[node name="Waltuh" type="Node2D" unique_id=492313851]
+[node name="Waltuh" type="Node2D"]
+script = ExtResource("1_kfhkg")
 
-[node name="WaltuhDrawing" type="Sprite2D" parent="." unique_id=733981034]
+[node name="HiggsAudioStreamer" parent="." instance=ExtResource("2_lpox2")]
+
+[node name="WaltuhDrawing" type="Sprite2D" parent="."]
 position = Vector2(578, 313)
 scale = Vector2(0.59006214, 0.59006214)
 texture = ExtResource("1_fcf1m")
 
-[node name="Chatbubble" type="Sprite2D" parent="." unique_id=1412661050]
+[node name="Chatbubble" type="Sprite2D" parent="."]
 position = Vector2(729, 156)
 scale = Vector2(0.388, 0.388)
 texture = ExtResource("2_01hks")
 
-[node name="AnimatedDottedLabel" type="Label" parent="Chatbubble" unique_id=436616567]
+[node name="AnimatedDottedLabel" type="Label" parent="Chatbubble"]
 offset_left = -61.855667
 offset_top = -162.37114
 offset_right = 221.64946
@@ -30,6 +36,11 @@ label_settings = SubResource("LabelSettings_01hks")
 vertical_alignment = 1
 script = ExtResource("3_x3lla")
 
-[node name="Timer" type="Timer" parent="Chatbubble/AnimatedDottedLabel" unique_id=1912083097]
+[node name="Timer" type="Timer" parent="Chatbubble/AnimatedDottedLabel"]
 wait_time = 0.5
 autostart = true
+
+[node name="Mouth" type="Sprite2D" parent="."]
+position = Vector2(546.99994, 265)
+scale = Vector2(0.20749997, 0.04900003)
+texture = ExtResource("4_7opfl")
