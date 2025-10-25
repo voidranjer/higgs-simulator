@@ -12,12 +12,8 @@ config_version=5
 
 config/name="Higgs Simulator"
 run/main_scene="uid://d2xhbt1by12m7"
-config/features=PackedStringArray("4.6", "Forward Plus")
+config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
-
-[audio]
-
-driver/enable_input=true
 
 [physics]
 

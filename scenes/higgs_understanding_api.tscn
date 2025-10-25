@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://1d2n7g6nupr5"]
+
+[ext_resource type="Script" uid="uid://blbavtf0fwmg8" path="res://scripts/higgs_understanding_api.gd" id="1_l2njo"]
+
+[node name="HiggsUnderstandingApi" type="Node" unique_id=2122292312]
+script = ExtResource("1_l2njo")
+
+[node name="HTTPRequest" type="HTTPRequest" parent="." unique_id=2056799726]

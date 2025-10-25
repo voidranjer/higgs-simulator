@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://bcxgjr12ha0ge"]
+
+[ext_resource type="Script" uid="uid://3pctgfohc706" path="res://scripts/transcript_receiver.gd" id="1_dacx8"]
+
+[node name="TranscriptReceiver" type="Node" unique_id=1854735126]
+script = ExtResource("1_dacx8")

@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dxk8xhforfwgv"]
+
+[ext_resource type="Script" uid="uid://bq86go3aki4gt" path="res://scripts/audio_receiver.gd" id="1_6ni1f"]
+
+[node name="AudioReceiver" type="Node" unique_id=179558906]
+script = ExtResource("1_6ni1f")

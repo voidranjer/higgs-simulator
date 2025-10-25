@@ -2,14 +2,15 @@
 
 [ext_resource type="PackedScene" uid="uid://farwc0kbsdbn" path="res://scenes/waltuh.tscn" id="1_0w3jm"]
 [ext_resource type="Script" uid="uid://dktdvc3wjvbfm" path="res://scripts/simulator.gd" id="1_5hxtd"]
-[ext_resource type="PackedScene" uid="uid://djways4sqylrs" path="res://scenes/higgs_audio_streamer.tscn" id="3_jtl1c"]
+[ext_resource type="PackedScene" uid="uid://bb2lnu7nrnv04" path="res://scenes/higgs_audio_streamer.tscn" id="3_jtl1c"]
 [ext_resource type="PackedScene" uid="uid://c24x2ul0ic5yg" path="res://scenes/llm_api.tscn" id="4_jtl1c"]
 
-[node name="Simulator" type="Node2D" unique_id=2029602363]
+[node name="Simulator" type="Node2D"]
 script = ExtResource("1_5hxtd")
 
-[node name="Waltuh" parent="." unique_id=492313851 instance=ExtResource("1_0w3jm")]
+[node name="Waltuh" parent="." instance=ExtResource("1_0w3jm")]
 
-[node name="HiggsAudioStreamer" parent="." unique_id=1364434995 instance=ExtResource("3_jtl1c")]
+[node name="HiggsAudioStreamer" parent="." instance=ExtResource("3_jtl1c")]
 
-[node name="LlmApi" parent="." unique_id=1934784916 instance=ExtResource("4_jtl1c")]
+[node name="LlmApi" parent="." instance=ExtResource("4_jtl1c")]
+character_name = "you"
