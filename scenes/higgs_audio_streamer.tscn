@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://djways4sqylrs"]
+
+[ext_resource type="Script" uid="uid://d4ky274xuvu8u" path="res://scripts/higgs_audio_streamer.gd" id="1_8q27n"]
+
+[node name="HiggsAudioStreamer" type="Node" unique_id=1364434995]
+script = ExtResource("1_8q27n")
