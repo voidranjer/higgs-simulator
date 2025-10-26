@@ -4,7 +4,7 @@ extends CanvasLayer
 
 # --- Node References ---
 # Assign these in the Inspector by dragging the nodes
-@onready var menu_button: Button = $MenuButton
+@onready var menu_button: Button = $ClipboardButton
 @onready var checklist_panel: PanelContainer = $ChecklistPanel
 
 # --- Animation Properties ---

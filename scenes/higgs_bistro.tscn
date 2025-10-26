@@ -1,0 +1,64 @@
+[gd_scene load_steps=12 format=3 uid="uid://d2xhbt1by12m7"]
+
+[ext_resource type="Script" uid="uid://dktdvc3wjvbfm" path="res://scripts/higgs_bistro.gd" id="1_fkqyv"]
+[ext_resource type="Texture2D" uid="uid://de4euxvcm4rta" path="res://assets/restaurant.jpg" id="2_ir6ar"]
+[ext_resource type="Script" uid="uid://qp4i6yerhhjq" path="res://scripts/background.gd" id="3_nahur"]
+[ext_resource type="Texture2D" uid="uid://b6d2tl05u3nla" path="res://assets/higgs_diner.png" id="4_1fj2n"]
+[ext_resource type="PackedScene" uid="uid://farwc0kbsdbn" path="res://scenes/talking_head.tscn" id="5_5sthn"]
+[ext_resource type="PackedScene" uid="uid://c24x2ul0ic5yg" path="res://scenes/llm_api.tscn" id="6_hwlie"]
+[ext_resource type="Texture2D" uid="uid://4ok3cie58koq" path="res://assets/waltuh_floating_head.png" id="6_ir6ar"]
+[ext_resource type="PackedScene" uid="uid://bcxgjr12ha0ge" path="res://scenes/transcript_receiver.tscn" id="7_j74h6"]
+[ext_resource type="AudioStream" uid="uid://bsqr8cqakfkx2" path="res://assets/fine_dining_bg.ogg" id="8_djsjy"]
+[ext_resource type="PackedScene" uid="uid://husaqq5c35x2" path="res://scenes/aggresion_meter.tscn" id="9_m578p"]
+[ext_resource type="PackedScene" uid="uid://ba4wwuace4nrn" path="res://scenes/checklist_drawer.tscn" id="10_7n5fi"]
+
+[node name="HiggsBistro" type="Node2D"]
+script = ExtResource("1_fkqyv")
+
+[node name="Background" type="Sprite2D" parent="."]
+position = Vector2(594.00006, 321)
+scale = Vector2(0.9724794, 0.89874303)
+texture = ExtResource("2_ir6ar")
+script = ExtResource("3_nahur")
+
+[node name="HiggsDiner" type="Sprite2D" parent="."]
+position = Vector2(350.16364, 322.14685)
+scale = Vector2(0.50358665, 0.46540308)
+texture = ExtResource("4_1fj2n")
+
+[node name="Waltuh" parent="." instance=ExtResource("5_5sthn")]
+position = Vector2(294, 15)
+
+[node name="WalterHead" type="Sprite2D" parent="Waltuh"]
+position = Vector2(578, 313)
+scale = Vector2(0.59006214, 0.59006214)
+texture = ExtResource("6_ir6ar")
+
+[node name="LlmApi" parent="." instance=ExtResource("6_hwlie")]
+character_name = "you"
+
+[node name="TranscriptReceiver" parent="." instance=ExtResource("7_j74h6")]
+
+[node name="BGM" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_djsjy")
+autoplay = true
+bus = &"BGM"
+parameters/looping = true
+
+[node name="AggressionMeter" parent="." instance=ExtResource("9_m578p")]
+offset_left = 736.0
+offset_top = 144.0
+offset_right = 1003.0
+offset_bottom = 160.0
+
+[node name="ChecklistDrawer" parent="." instance=ExtResource("10_7n5fi")]
+
+[node name="Button" type="Button" parent="."]
+offset_left = 810.0
+offset_top = 204.0
+offset_right = 885.0
+offset_bottom = 235.0
+scale = Vector2(1.5, 1.5)
+text = "Evaluate"
+
+[connection signal="pressed" from="Button" to="." method="_on_button_pressed"]

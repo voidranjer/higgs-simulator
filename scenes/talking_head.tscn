@@ -1,0 +1,49 @@
+[gd_scene load_steps=8 format=3 uid="uid://farwc0kbsdbn"]
+
+[ext_resource type="Script" uid="uid://dovs3nlh4xgtn" path="res://scripts/talking_head.gd" id="1_kqnno"]
+[ext_resource type="PackedScene" uid="uid://bb2lnu7nrnv04" path="res://scenes/higgs_audio_streamer.tscn" id="2_yf4ag"]
+[ext_resource type="Texture2D" uid="uid://4ok3cie58koq" path="res://assets/waltuh_floating_head.png" id="3_hggh8"]
+[ext_resource type="Texture2D" uid="uid://bkvjkrvrksusq" path="res://assets/chatbubble.png" id="4_a1ab7"]
+[ext_resource type="Script" uid="uid://c3rf1nf6u2wgh" path="res://scripts/animated_dotted_label.gd" id="5_xoxcg"]
+[ext_resource type="Texture2D" uid="uid://cuoctf8e2p6wb" path="res://assets/mouth.png" id="6_7ijg8"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_01hks"]
+font_size = 150
+font_color = Color(0, 0, 0, 1)
+
+[node name="TalkingHead" type="Node2D"]
+script = ExtResource("1_kqnno")
+
+[node name="HiggsAudioStreamer" parent="." instance=ExtResource("2_yf4ag")]
+
+[node name="FloatingHead" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(578, 313)
+scale = Vector2(0.59006214, 0.59006214)
+texture = ExtResource("3_hggh8")
+
+[node name="ChatBubble" type="Sprite2D" parent="."]
+z_index = 5
+position = Vector2(800, 154)
+scale = Vector2(0.388, 0.388)
+texture = ExtResource("4_a1ab7")
+
+[node name="AnimatedDottedLabel" type="Label" parent="ChatBubble"]
+offset_left = -61.855667
+offset_top = -162.37114
+offset_right = 221.64946
+offset_bottom = 42.62886
+text = "..."
+label_settings = SubResource("LabelSettings_01hks")
+vertical_alignment = 1
+script = ExtResource("5_xoxcg")
+
+[node name="Timer" type="Timer" parent="ChatBubble/AnimatedDottedLabel"]
+wait_time = 0.5
+autostart = true
+
+[node name="Mouth" type="Sprite2D" parent="."]
+z_index = 5
+position = Vector2(571, 495.00003)
+scale = Vector2(0.36000007, 0.04900003)
+texture = ExtResource("6_7ijg8")

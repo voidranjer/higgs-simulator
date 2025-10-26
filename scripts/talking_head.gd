@@ -11,6 +11,8 @@ extends Node2D
 # How smoothly the mouth animates (higher is faster)
 @export var smoothing = 15.0
 
+@export var voice_name: String = "walter"
+
 var mouth_bus_index: int
 # Store the original X scale so we only change Y
 var base_scale_x: float
@@ -60,4 +62,4 @@ func _process(delta: float) -> void:
 
 func speak(text_to_speak: String):
 	chat_bubble.show()
-	higgs_audio_streamer.speak(text_to_speak, "walter")
+	higgs_audio_streamer.speak(text_to_speak, voice_name)

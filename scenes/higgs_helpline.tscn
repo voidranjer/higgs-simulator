@@ -1,0 +1,37 @@
+[gd_scene load_steps=7 format=3 uid="uid://3tmr1w6mxmq1"]
+
+[ext_resource type="Texture2D" uid="uid://bx74rpbvy7ba8" path="res://assets/house_door.png" id="1_s2wjk"]
+[ext_resource type="Script" uid="uid://qp4i6yerhhjq" path="res://scripts/background.gd" id="2_tvc25"]
+[ext_resource type="Texture2D" uid="uid://bt6jad1m8vdgn" path="res://assets/higgs_helpline.png" id="3_vf420"]
+[ext_resource type="PackedScene" uid="uid://farwc0kbsdbn" path="res://scenes/talking_head.tscn" id="4_ji63k"]
+[ext_resource type="Texture2D" uid="uid://osxwcnwey8lm" path="res://assets/morgan.png" id="5_4il64"]
+[ext_resource type="PackedScene" uid="uid://ba4wwuace4nrn" path="res://scenes/checklist_drawer.tscn" id="6_7uywc"]
+
+[node name="HiggsHelpline" type="Node2D"]
+
+[node name="Background" type="Sprite2D" parent="."]
+position = Vector2(580.00006, 330)
+scale = Vector2(0.9146919, 0.9146918)
+texture = ExtResource("1_s2wjk")
+script = ExtResource("2_tvc25")
+
+[node name="Frame" type="ColorRect" parent="."]
+offset_left = 93.0
+offset_top = 110.0
+offset_right = 527.0
+offset_bottom = 544.0
+
+[node name="HiggsHelpline" type="Sprite2D" parent="Frame"]
+position = Vector2(217, 216)
+scale = Vector2(0.41162106, 0.41162106)
+texture = ExtResource("3_vf420")
+
+[node name="TalkingHead" parent="." instance=ExtResource("4_ji63k")]
+position = Vector2(256, 20)
+
+[node name="Morgan" type="Sprite2D" parent="TalkingHead"]
+position = Vector2(577, 384)
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("5_4il64")
+
+[node name="ChecklistDrawer" parent="." instance=ExtResource("6_7uywc")]
