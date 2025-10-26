@@ -16,7 +16,7 @@ signal aggression_level_changed(new_level: int)
 @export var character_name: String = "you"
 
 # State variables
-var activity_history: Array[String] = []
+var conversation_history: Array[String] = []
 var aggression_level: int = 10
 
 var sys_instr =  """	
@@ -85,7 +85,7 @@ var conversation = [
 ]
 
 func interact(message='', first=false):
-	activity_history.append("[user] " + message)
+	conversation_history.append("[employee] " + message)
 	conversation.append({
 		"role": "user",
 		"parts":[
@@ -142,7 +142,7 @@ func _on_request_completed(result, response_code, headers, body):
 	var payload = JSON.parse_string(response["candidates"][0]["content"]["parts"][0]["text"])
 	aggression_level = payload.aggression_level
 	
-	activity_history.append("[you] {%s}" % payload.voice_line)
+	conversation_history.append("[customer] {%s}" % payload.voice_line)
 	conversation.append({
 		"role": "model",
 		"parts":[

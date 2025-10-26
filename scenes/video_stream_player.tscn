@@ -1,0 +1,19 @@
+[gd_scene load_steps=2 format=3 uid="uid://dfwq2gkx2q55x"]
+
+[ext_resource type="VideoStream" uid="uid://1tur5lftbjpp" path="res://assets/slam.ogv" id="1_scjsm"]
+
+[node name="Control" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="."]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+scale = Vector2(0.6, 0.6)
+stream = ExtResource("1_scjsm")
+autoplay = true

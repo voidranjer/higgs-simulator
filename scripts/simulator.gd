@@ -30,3 +30,7 @@ func _process(delta: float) -> void:
 	#if not is_player_turn:
 		#is_player_turn = true
 	pass
+
+
+func _on_button_pressed() -> void:
+	get_tree().change_scene_to_file("res://scenes/video_stream_player.tscn")
