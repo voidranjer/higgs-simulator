@@ -12,77 +12,62 @@ var LLM_API_KEY = ProjectSettings.get_setting("custom_apis/llm_api_key")
 signal message_received(response_text: String)
 
 # State variables
-var aggression_level: int = 8
+var checklist_bools = [false, false, false, false, false]
 var conversation = [] # raymond's format (for LLM generation)
 
 @export_multiline var sys_instr: String =  """	
-Your name is Walter. 
+Your name is Morgan. 
 
-You are a customer at "The Higgs Bistro", a very fancy and expensive restaurant.
+You are an 80 year old man who lives alone.
 
-You and your partner are here for your 10th wedding anniversary. You have been waiting for 20 minutes past your reservation time.
+You heard knocking at your door, and now you are at the door.
 
-You are speaking to a waiter, and the name badge on his uniform has the name "Murdock" on it.
+You are speaking to a man on the other side of the door. He is wearing a shirt that says Higgs Helpline and a nametag that says "Murdock".
 
-The restaurant is full. The kitchen is running slow, and a large party at a prime table is lingering over dessert, refusing to leave. There is no table for you right now. The best the waiter can do is assure you that your party is the very next to be seated.
+You slipped three days ago, and it is hard for you to move around. That is why you have not picked up your newspaper. You are bruised and there is no further serious injury.
 
-aggression_level describes how annoyed and impatient you currently are as a customer.
-aggression_level is an integer on a scale of 1 to 10.
-aggression_level should increase, decrease or stay the same based on how Murdock's choice of words as a waiter affected your emotional state.
-aggression_level can increase or decrease by steps of 3, 4, or 5 based on how affected you were.
+You are hesitant to reveal that information until you gain trust in Murdock.
 
-    aggression_level increases if Murdock:
+Here is the list of boolean variables:
 
-		Dismiss your feelings (e.g., "I understand, but...")
+	self_identify: Murdock has identified himself and stated that he is here for a welfare check.
 
-		Give vague, non-committal answers (e.g., "It'll be soon," "Just a few more minutes.")
+	state_peace: Murdock has stated in some way that he comes in peace. For example, he confirms that he is here to make sure you are safe, or confirms that he is not here to arrest you or cause trouble.
 
-		Blame other customers (e.g., "Those people just won't leave.")
+	state_concern: Murdock showed the reason for concern by stating that your newspaper has not been collected for three days.
 
-        Sound robotic or like I'm reading a script.
+	show_understanding: Murdock has validated your hesitation or shows understanding of your worries.
 
-		Make a promise I can't keep (e.g., "I'll get you a table in 5 minutes.")
-
-    aggression_level decreases if Murdock:
-
-        Use active listening and show genuine empathy (e.g., "A 40-minute wait for your anniversary is completely unacceptable. You have every right to be upset.")
-
-        Take ownership of the problem (e.g., "I apologize for our poor planning.")
-
-        Give a clear, honest (but diplomatic) explanation.
-
-        Offer a proactive, reasonable solution to make the wait more comfortable (e.g., "While you are first in line for the next table, can I please bring you and your partner a glass of champagne on the house?").
+	direct_assessment: Murdock has asked you if you are hurt or in danger.
 	
-	At the end of the game, you will be asked to provide an evaluation on how well Murdock performed (as a third-party. Think of this as an evaluation on a recorded conversation). Set 'is_feedback_message' to true when providing such messages.
+These boolean variables should be switched from false to true based on what Murdock says. Never switch the variables from true to false.
 """
 
 @export_multiline var first_prompt: String = """
-current aggression_level: 8 out of 10
+The current states of the boolean variables are:
+self_identify: false
+state_peace: false
+state_concern: false
+show_understanding: false
+direct_assessment: false
 
-You go up to Murdock at his host stand.
-Deliver your first line.
+You have just arrived at your door and read Murdock's shirt and nametag. Deliver your first voice_line.
+Provide the updated boolean variable values.
 """
 
-var feedback_sys_prompt = """# Employee Training Module: Handling an Angry Customer - Walter's 10th Anniversary Wait
+func prompt(helper_line, checklist) -> String:
+	return """
+The current states of the boolean variables are:
+self_identify: %s
+state_peace: %s
+state_concern: %s
+show_understanding: %s
+direct_assessment: %s
 
-## Instruction
-
-- You are a third party employee performance evaluator.
-
-- Based on the following conversation record, identify which de-escalation techniques were used effectively by the employee and which could have been improved. Provide specific examples from the conversation to support your analysis.
-
-- Be succinct.
-
-- Deliver your report formatted in BBCode.
-
-"""
-
-func prompt(waiter_line, aggr_lvl) -> String:
-	return "Current aggression_level is " + str(aggr_lvl) + ". Murdock says \"" + waiter_line + "\"" + \
-'''
-	
-Deliver your voice_line, and provide your new aggression_level.
-'''
+""" % checklist \
++ \
+"""Murdock says \"%\". Deliver your voice_line, and provide the updated boolean variables. 
+""" % helper_line
 
 func interact(message: String):
 	var is_initial_message = message == "<|initial|>"
@@ -91,7 +76,7 @@ func interact(message: String):
 		"role": "user",
 		"parts":[
 			{
-				"text": first_prompt if is_initial_message else prompt(message, aggression_level)
+				"text": first_prompt if is_initial_message else prompt(message, checklist_bools)
 			}
 		]
 	})
@@ -116,7 +101,11 @@ func interact(message: String):
 					#"is_game_over_good_ending": {"type": "BOOLEAN"},
 					#"is_game_over_bad_ending": {"type": "BOOLEAN"},
 					"voice_line": {"type": "STRING"},
-					"aggression_level": {"type": "INTEGER"},
+					"self_identify": {"type": "BOOLEAN"},
+					"state_peace": {"type": "BOOLEAN"},
+					"state_concern": {"type": "BOOLEAN"},
+					"show_understanding": {"type": "BOOLEAN"},
+					"direct_assessment": {"type": "BOOLEAN"}
 				}
 			}
 		}
@@ -143,13 +132,25 @@ func _on_request_completed(result, response_code, headers, body):
 	var content = response["candidates"][0]["content"]["parts"][0]["text"]
 
 	var payload = JSON.parse_string(content)
-	aggression_level = payload.aggression_level
+	checklist_bools = [payload.self_identify,
+						payload.state_peace,
+						payload.state_concern,
+						payload.show_understanding,
+						payload.direct_assessment]
 	
 	conversation.append({
 		"role": "model",
 		"parts":[
 			{
-				"text": "Current aggression_level is " + str(aggression_level) + ". " + payload.voice_line
+				"text": '''
+The current states of the boolean variables are:
+self_identify: %s
+state_peace: %s
+state_concern: %s
+show_understanding: %s
+direct_assessment: %s
+
+''' % checklist_bools + payload.voice_line
 			}
 		]
 	})
