@@ -2,8 +2,8 @@ class_name LlmApi
 extends Node
 
 # Constants
-const LLM_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
-const LLM_API_KEY = "<YOUR API KEY HERE>"
+var LLM_API_URL = ProjectSettings.get_setting("custom_apis/llm_endpoint")
+var LLM_API_KEY = ProjectSettings.get_setting("custom_apis/llm_api_key")
 
 # Child nodes
 @onready var http_request: HTTPRequest = $HTTPRequest

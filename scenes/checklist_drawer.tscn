@@ -33,13 +33,31 @@ text = "Checklist"
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 button_mask = 0
-text = "First item"
+text = "Identify yourself."
 
 [node name="CheckBox2" type="CheckBox" parent="ChecklistPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 button_mask = 0
-text = "Second item"
+text = "\"I come in peace\", not here for trouble."
+
+[node name="CheckBox3" type="CheckBox" parent="ChecklistPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+button_mask = 0
+text = "State your concern."
+
+[node name="CheckBox4" type="CheckBox" parent="ChecklistPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+button_mask = 0
+text = "Show understanding, validate hesitations."
+
+[node name="CheckBox5" type="CheckBox" parent="ChecklistPanel/MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+button_mask = 0
+text = "Direct assessment of any immediate dangers."
 
 [node name="ClipboardButton" type="Button" parent="."]
 anchors_preset = 2

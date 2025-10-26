@@ -4,5 +4,3 @@
 
 [node name="LlmApi2" type="Node"]
 script = ExtResource("1_apia2")
-sys_instr = null
-first_prompt = null

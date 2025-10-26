@@ -1,6 +1,8 @@
 # Godot 4+ specific ignores
 .godot/
 /android/
+override.cfg
 
 .env
 .venv
+*ed.json
