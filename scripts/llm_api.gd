@@ -39,15 +39,15 @@ aggression_level can increase or decrease by steps of 1, 2, or 3 based on how af
 
     aggression_level increases if Murdock:
 
-        Dismiss your feelings (e.g., "I understand, but...")
+		Dismiss your feelings (e.g., "I understand, but...")
 
-        Give vague, non-committal answers (e.g., "It'll be soon," "Just a few more minutes.")
+		Give vague, non-committal answers (e.g., "It'll be soon," "Just a few more minutes.")
 
-        Blame other customers (e.g., "Those people just won't leave.")
+		Blame other customers (e.g., "Those people just won't leave.")
 
         Sound robotic or like I'm reading a script.
 
-        Make a promise I can't keep (e.g., "I'll get you a table in 5 minutes.")
+		Make a promise I can't keep (e.g., "I'll get you a table in 5 minutes.")
 
     aggression_level decreases if Murdock:
 

@@ -2,6 +2,7 @@ extends Node2D
 
 @onready var mouth: Sprite2D = $Mouth
 @onready var higgs_audio_streamer: HiggsAudioStreamer = $HiggsAudioStreamer
+@onready var chat_bubble: Sprite2D = $ChatBubble
 
 # The minimum "squash" of the mouth (closed)
 @export var min_scale_y = 0.1
@@ -24,6 +25,10 @@ func _ready() -> void:
 	
 	# Set the mouth to its closed state initially
 	mouth.scale.y = min_scale_y
+	
+	higgs_audio_streamer.finished_playing_audio.connect(
+		func(): chat_bubble.hide()
+	)
 
 
 func _process(delta: float) -> void:
@@ -52,3 +57,7 @@ func _process(delta: float) -> void:
 	
 	# Ensure the X scale never changes
 	mouth.scale.x = base_scale_x
+
+func speak(text_to_speak: String):
+	chat_bubble.show()
+	higgs_audio_streamer.speak(text_to_speak, "walter")

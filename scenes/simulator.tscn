@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://d2xhbt1by12m7"]
+[gd_scene load_steps=11 format=3 uid="uid://d2xhbt1by12m7"]
 
 [ext_resource type="PackedScene" uid="uid://farwc0kbsdbn" path="res://scenes/waltuh.tscn" id="1_0w3jm"]
 [ext_resource type="Script" uid="uid://dktdvc3wjvbfm" path="res://scripts/simulator.gd" id="1_5hxtd"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://bcxgjr12ha0ge" path="res://scenes/transcript_receiver.tscn" id="5_5x4kj"]
 [ext_resource type="AudioStream" uid="uid://bsqr8cqakfkx2" path="res://assets/fine_dining_bg.ogg" id="7_33oco"]
 [ext_resource type="PackedScene" uid="uid://husaqq5c35x2" path="res://scenes/aggresion_meter.tscn" id="9_rei2c"]
+[ext_resource type="PackedScene" uid="uid://ba4wwuace4nrn" path="res://scenes/checklist_drawer.tscn" id="10_ggio2"]
 
 [node name="Simulator" type="Node2D"]
 script = ExtResource("1_5hxtd")
@@ -42,3 +43,5 @@ offset_left = 736.0
 offset_top = 144.0
 offset_right = 1003.0
 offset_bottom = 160.0
+
+[node name="ChecklistDrawer" parent="." instance=ExtResource("10_ggio2")]
