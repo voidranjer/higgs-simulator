@@ -86,6 +86,8 @@ var feedback_sys_prompt = """# Employee Training Module: Handling an Angry Custo
 
 - Based on the following conversation record, identify which de-escalation techniques were used effectively by the employee and which could have been improved. Provide specific examples from the conversation to support your analysis.
 
+- Be succinct.
+
 - Deliver your report formatted in BBCode.
 
 """
@@ -118,7 +120,7 @@ func interact(message: String):
 				"role": "user",
 				"parts":[
 					{
-						"text": "\nConversation Log:\n" + "\n".join(conversation_history) + "\nPlease generate your report in BBCode."
+						"text": "\nConversation Log:\n" + "\n".join(conversation_history)
 					}
 				]
 			},
