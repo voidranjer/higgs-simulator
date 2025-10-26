@@ -24,18 +24,16 @@ Your name is Walter.
 
 You are a customer at "The Higgs Bistro", a very fancy and expensive restaurant.
 
-You and your partner are here for your 10th wedding anniversary. You have been waiting for 40 minutes past your reservation time.
-
-You are frustrated, feeling ignored, and your special night is being spoiled. You are stern, visibly upset, and impatient. You feel disrespected.
+You and your partner are here for your 10th wedding anniversary. You have been waiting for 20 minutes past your reservation time.
 
 You are speaking to a waiter, and the name badge on his uniform has the name "Murdock" on it.
 
-The restaurant is full. The kitchen is running slow, and a large party at a prime table is lingering over dessert, refusing to leave. There is no table for you right now. The best I can do is assure you that your party is the very next to be seated.
+The restaurant is full. The kitchen is running slow, and a large party at a prime table is lingering over dessert, refusing to leave. There is no table for you right now. The best the waiter can do is assure you that your party is the very next to be seated.
 
 aggression_level describes how annoyed and impatient you currently are as a customer.
-aggression_level is on a scale of 1 to 10.
+aggression_level is an integer on a scale of 1 to 10.
 aggression_level should increase, decrease or stay the same based on how Murdock's choice of words as a waiter affected your emotional state.
-aggression_level can increase or decrease by steps of 1, 2, or 3 based on how affected you were.
+aggression_level can increase or decrease by steps of 3, 4, or 5 based on how affected you were.
 
     aggression_level increases if Murdock:
 
@@ -61,14 +59,15 @@ aggression_level can increase or decrease by steps of 1, 2, or 3 based on how af
 """
 
 var first_prompt = """
-aggression_level: 8 out of 10
+current aggression_level: 8 out of 10
 
 You go up to Murdock at his host stand.
 Deliver your first line.
 """
 
-func prompt(waiter_line) -> String:
-	return "Murdock says \"" + waiter_line + "\"" + \
+func prompt(waiter_line, aggr_lvl) -> String:
+	
+	return "Current aggression_level is " + str(aggr_lvl) + ". Murdock says \"" + waiter_line + "\"" + \
 '''
 	
 Deliver your voice_line, and provide your new aggression_level.
@@ -91,7 +90,7 @@ func interact(message='', first=false):
 		"role": "user",
 		"parts":[
 			{
-				"text": first_prompt if first else prompt(message)
+				"text": first_prompt if first else prompt(message, aggression_level)
 			}
 		]
 	})
@@ -141,18 +140,18 @@ func _ready() -> void:
 func _on_request_completed(result, response_code, headers, body):
 	var response = JSON.parse_string(body.get_string_from_utf8())
 	var payload = JSON.parse_string(response["candidates"][0]["content"]["parts"][0]["text"])
-	
-	#print(payload.feedback)
+	aggression_level = payload.aggression_level
 	
 	activity_history.append("[you] {%s}" % payload.voice_line)
 	conversation.append({
 		"role": "model",
 		"parts":[
 			{
-				"text": payload.voice_line
+				"text": "Current aggression_level is "+str(aggression_level)+". " + payload.voice_line
 			}
 		]
 	})
+	print(conversation[-1])
 	
 	message_received.emit(payload.voice_line)
 	aggression_level_changed.emit(payload.aggression_level)
