@@ -10,6 +10,7 @@ const LLM_API_KEY = "<YOUR API KEY HERE>"
 
 # Signals
 signal message_received(response_text: String)
+signal aggression_level_changed(new_level: int)
 
 # Class variables (configuration)
 @export var character_name: String = "you"
@@ -141,7 +142,6 @@ func _on_request_completed(result, response_code, headers, body):
 	var response = JSON.parse_string(body.get_string_from_utf8())
 	var payload = JSON.parse_string(response["candidates"][0]["content"]["parts"][0]["text"])
 	
-	print(payload.aggression_level)
 	#print(payload.feedback)
 	
 	activity_history.append("[you] {%s}" % payload.voice_line)
@@ -155,3 +155,4 @@ func _on_request_completed(result, response_code, headers, body):
 	})
 	
 	message_received.emit(payload.voice_line)
+	aggression_level_changed.emit(payload.aggression_level)

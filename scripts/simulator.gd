@@ -15,6 +15,9 @@ func _ready() -> void:
 	transcript_receiver.transcript_received.connect(
 		func(message: String): llm_api.interact(message)
 	)
+	llm_api.aggression_level_changed.connect(
+		func(new_level: int): aggression_meter.health = new_level
+	)
 	
 	aggression_meter.init_health(10)
 	aggression_meter.health = 7
