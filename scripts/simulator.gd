@@ -18,17 +18,8 @@ func _ready() -> void:
 	
 	aggression_meter.init_health(10)
 	aggression_meter.health = 7
-
-	#walter_streamer.speak("""It is 8:10 PM at The Higgs Bistro. Beyond your polished podium, the main dining room glows with warm light, filled with the soft clinking of crystal and the polite murmur of conversation.
-#
-#But here in the foyer, the air is tense. It is crowded. You are the Maître d', and you know you are running significantly behind schedule.
-#
-#A man who has been standing stiffly by the door, checking his watch every few minutes, finally sighs loud enough to be heard. He leaves his partner's side and strides toward you. His face is a tight mask of frustration. He stops directly in front of your podium and says, in a low, tight voice:
-#
-#'This is completely unacceptable. Our reservation was for 7:30. It is now 8:10. We are waiting 40 minutes for a table we booked weeks ago for our anniversary. What exactly is going on here?'
-	#""", "walter")
 	
-	#llm_api.interact("Good evening.")
+	llm_api.interact("", true)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

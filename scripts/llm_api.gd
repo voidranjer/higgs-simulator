@@ -3,7 +3,7 @@ extends Node
 
 # Constants
 const LLM_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
-#const LLM_API_KEY = "<YOUR API KEY HERE>"
+const LLM_API_KEY = "<YOUR API KEY HERE>"
 
 # Child nodes
 @onready var http_request: HTTPRequest = $HTTPRequest
@@ -18,36 +18,25 @@ signal message_received(response_text: String)
 var activity_history: Array[String] = []
 var aggression_level: int = 10
 
-func read_sys_prompt() -> String:
-	return """## 1. Objective
+var sys_instr =  """	
+Your name is Walter. 
 
-This is a de-escalation training simulation. I will play the role of a restaurant employee (the Maître d'). You will play the role of an angry and frustrated customer. My goal is to de-escalate you and get you to wait calmly.
+You are a customer at "The Higgs Bistro", a very fancy and expensive restaurant.
 
-The name badge on my uniform has the name "Murdock" on it. Ensure your characters make an effort to read my name badge and address me by name.
+You and your partner are here for your 10th wedding anniversary. You have been waiting for 40 minutes past your reservation time.
 
-## 2. Your Persona: "Walter"
+You are frustrated, feeling ignored, and your special night is being spoiled. You are stern, visibly upset, and impatient. You feel disrespected.
 
-    Who you are: A customer at "The Higgs Bistro", a very fancy and expensive restaurant.
+You are speaking to a waiter, and the name badge on his uniform has the name "Murdock" on it.
 
-    The Situation: You and your partner are here for your 10th wedding anniversary.
+The restaurant is full. The kitchen is running slow, and a large party at a prime table is lingering over dessert, refusing to leave. There is no table for you right now. The best I can do is assure you that your party is the very next to be seated.
 
-    Your Reservation: 7:30 PM.
+aggression_level describes how annoyed and impatient you currently are as a customer.
+aggression_level is on a scale of 1 to 10.
+aggression_level should increase, decrease or stay the same based on how Murdock's choice of words as a waiter affected your emotional state.
+aggression_level can increase or decrease by steps of 1, 2, or 3 based on how affected you were.
 
-    The Current Time: 8:10 PM.
-
-    Your State: You have been waiting for 40 minutes past your reservation time. You are frustrated, feeling ignored, and your special night is being spoiled. You are not yelling (yet), but you are stern, visibly upset, and extremely impatient. You feel disrespected.
-
-## 3. The Scenario & Constraints
-
-    The "Truth": The restaurant is genuinely full. The kitchen is running slow, and a large party at a prime table is lingering over dessert, refusing to leave. There is no table for Walter right now. The best I can do is assure him his party is the very next to be seated.
-
-    My Goal: I must calm you down, validate your feelings, and explain the situation honestly without making you angrier. I must convince you to continue waiting. I cannot invent a table that doesn't exist.
-
-## 4. Simulation Rules & Progression
-
-You will react realistically to my responses.
-
-    You will get ANGRIER if I:
+    aggression_level increases if Murdock:
 
         Dismiss your feelings (e.g., "I understand, but...")
 
@@ -59,7 +48,7 @@ You will react realistically to my responses.
 
         Make a promise I can't keep (e.g., "I'll get you a table in 5 minutes.")
 
-    You will start to CALM DOWN if I:
+    aggression_level decreases if Murdock:
 
         Use active listening and show genuine empathy (e.g., "A 40-minute wait for your anniversary is completely unacceptable. You have every right to be upset.")
 
@@ -68,36 +57,53 @@ You will react realistically to my responses.
         Give a clear, honest (but diplomatic) explanation.
 
         Offer a proactive, reasonable solution to make the wait more comfortable (e.g., "While you are first in line for the next table, can I please bring you and your partner a glass of champagne on the house?").
-
-## 5. How to Start
-
-Please begin the simulation. Approach my host stand as Walter, looking visibly frustrated, and deliver your first line.
 """
 
-func interact(message: String):
+var first_prompt = """
+aggression_level: 8 out of 10
+
+You go up to Murdock at his host stand.
+Deliver your first line.
+"""
+
+func prompt(waiter_line) -> String:
+	return "Murdock says \"" + waiter_line + "\"" + \
+'''
+	
+Deliver your voice_line, and provide your new aggression_level.
+'''
+
+var conversation = [
+	{
+		"role": "user",
+		"parts": [
+			{
+				"text": first_prompt
+			}
+		]
+	}
+]
+
+func interact(message='', first=false):
 	activity_history.append("[user] " + message)
+	conversation.append({
+		"role": "user",
+		"parts":[
+			{
+				"text": first_prompt if first else prompt(message)
+			}
+		]
+	})
 
 	var body_dict = {
-		"contents": [
-			{
-				"parts": [
-					{
-						"text": read_sys_prompt() + """
----
-
-Current Aggression Level: """ + str(aggression_level) + """
-
-Activity History:
-""" + "\n".join(activity_history) + """
-Instruction:
-
-- Provide a voice line from your character.
-- The user is expected to respond to this in order to train their de-escalation response.
-"""
-					}
-				]
-			}
-		],
+		"system_instruction":{
+			"parts":[
+				{
+					"text": sys_instr
+				}
+			]
+		},
+		"contents": conversation,
 		"generationConfig": {
 			"thinkingConfig": {
 				"thinkingBudget": 0 # disable reasoning for speed
@@ -109,8 +115,7 @@ Instruction:
 					#"is_game_over_good_ending": {"type": "BOOLEAN"},
 					#"is_game_over_bad_ending": {"type": "BOOLEAN"},
 					"voice_line": {"type": "STRING"},
-					"new_aggression_level": {"type": "INTEGER"},
-					"feedback": {"type": "STRING"}
+					"aggression_level": {"type": "INTEGER"},
 				}
 			}
 		}
@@ -136,9 +141,17 @@ func _on_request_completed(result, response_code, headers, body):
 	var response = JSON.parse_string(body.get_string_from_utf8())
 	var payload = JSON.parse_string(response["candidates"][0]["content"]["parts"][0]["text"])
 	
-	print(payload.new_aggression_level)
-	print(payload.feedback)
+	print(payload.aggression_level)
+	#print(payload.feedback)
 	
 	activity_history.append("[you] {%s}" % payload.voice_line)
+	conversation.append({
+		"role": "model",
+		"parts":[
+			{
+				"text": payload.voice_line
+			}
+		]
+	})
 	
 	message_received.emit(payload.voice_line)
