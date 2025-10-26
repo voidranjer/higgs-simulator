@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://cthcjtfmrnneq"]
+
+[ext_resource type="Script" uid="uid://bguwupnehrkea" path="res://scripts/llm_api_2.gd" id="1_apia2"]
+
+[node name="LlmApi2" type="Node"]
+script = ExtResource("1_apia2")
+sys_instr = null
+first_prompt = null

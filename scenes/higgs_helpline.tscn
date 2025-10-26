@@ -28,6 +28,7 @@ texture = ExtResource("3_vf420")
 
 [node name="TalkingHead" parent="." instance=ExtResource("4_ji63k")]
 position = Vector2(256, 20)
+voice_name = "morgan"
 
 [node name="Morgan" type="Sprite2D" parent="TalkingHead"]
 position = Vector2(577, 384)

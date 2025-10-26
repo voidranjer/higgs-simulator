@@ -1,8 +1,9 @@
-class_name LlmApi
+class_name LlmApi2
 extends Node
 
 # Constants
 const LLM_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent"
+#const LLM_API_KEY = "<YOUR API KEY HERE>"
 const LLM_API_KEY = "<YOUR API KEY HERE>"
 
 # Child nodes
@@ -10,13 +11,10 @@ const LLM_API_KEY = "<YOUR API KEY HERE>"
 
 # Signals
 signal message_received(response_text: String)
-signal aggression_level_changed(new_level: int)
 
 # State variables
 var aggression_level: int = 8
-var conversation_history: Array[String] = [] # james's format (for feedback)
 var conversation = [] # raymond's format (for LLM generation)
-var is_expecting_feedback: bool = false
 
 @export_multiline var sys_instr: String =  """	
 Your name is Walter. 
@@ -89,74 +87,41 @@ Deliver your voice_line, and provide your new aggression_level.
 
 func interact(message: String):
 	var is_initial_message = message == "<|initial|>"
-	var is_feedback_message = message == "<|feedback|>"
-	
-	var body_dict
-	
-	if is_feedback_message:
-		is_expecting_feedback = true
-
-		body_dict = {
-			"system_instruction":{
-				"parts":[
-					{
-						"text": feedback_sys_prompt
-					}
-				]
-			},
-			"contents": {
-				"role": "user",
-				"parts":[
-					{
-						"text": "\nConversation Log:\n" + "\n".join(conversation_history)
-					}
-				]
-			},
-			"generationConfig": {
-				"thinkingConfig": {
-					"thinkingBudget": 0 # disable reasoning for speed
-				},
+			
+	conversation.append({
+		"role": "user",
+		"parts":[
+			{
+				"text": first_prompt if is_initial_message else prompt(message, aggression_level)
 			}
-		}
-	
-	else:
-		if not is_initial_message:
-			conversation_history.append("[employee] " + message)
-		
-		conversation.append({
-			"role": "user",
+		]
+	})
+
+	var body_dict = {
+		"system_instruction":{
 			"parts":[
 				{
-					"text": first_prompt if is_initial_message else prompt(message, aggression_level)
+					"text": sys_instr
 				}
 			]
-		})
-
-		body_dict = {
-			"system_instruction":{
-				"parts":[
-					{
-						"text": sys_instr
-					}
-				]
+		},
+		"contents": conversation,
+		"generationConfig": {
+			"thinkingConfig": {
+				"thinkingBudget": 0 # disable reasoning for speed
 			},
-			"contents": conversation,
-			"generationConfig": {
-				"thinkingConfig": {
-					"thinkingBudget": 0 # disable reasoning for speed
-				},
-				"responseMimeType": "application/json",
-				"responseSchema": {
-					"type": "OBJECT",
-					"properties": {
-						#"is_game_over_good_ending": {"type": "BOOLEAN"},
-						#"is_game_over_bad_ending": {"type": "BOOLEAN"},
-						"voice_line": {"type": "STRING"},
-						"aggression_level": {"type": "INTEGER"},
-					}
+			"responseMimeType": "application/json",
+			"responseSchema": {
+				"type": "OBJECT",
+				"properties": {
+					#"is_game_over_good_ending": {"type": "BOOLEAN"},
+					#"is_game_over_bad_ending": {"type": "BOOLEAN"},
+					"voice_line": {"type": "STRING"},
+					"aggression_level": {"type": "INTEGER"},
 				}
 			}
 		}
+	}
 		
 	var body_json_string = JSON.stringify(body_dict)
 	var headers = [
@@ -178,16 +143,9 @@ func _on_request_completed(result, response_code, headers, body):
 	var response = JSON.parse_string(body.get_string_from_utf8())
 	var content = response["candidates"][0]["content"]["parts"][0]["text"]
 
-	if is_expecting_feedback:
-		print("FEEDBACK RECEIVED")
-		globals.feedback_bbcode = content
-		get_tree().change_scene_to_file("res://scenes/feedback_board.tscn")
-		return
-
 	var payload = JSON.parse_string(content)
 	aggression_level = payload.aggression_level
 	
-	conversation_history.append("[customer] %s" % payload.voice_line)
 	conversation.append({
 		"role": "model",
 		"parts":[
@@ -199,4 +157,3 @@ func _on_request_completed(result, response_code, headers, body):
 	print(conversation[-1])
 	
 	message_received.emit(payload.voice_line)
-	aggression_level_changed.emit(payload.aggression_level)

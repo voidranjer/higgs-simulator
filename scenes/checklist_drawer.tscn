@@ -32,11 +32,13 @@ text = "Checklist"
 [node name="CheckBox" type="CheckBox" parent="ChecklistPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
+button_mask = 0
 text = "First item"
 
 [node name="CheckBox2" type="CheckBox" parent="ChecklistPanel/MarginContainer/VBoxContainer"]
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
+button_mask = 0
 text = "Second item"
 
 [node name="ClipboardButton" type="Button" parent="."]

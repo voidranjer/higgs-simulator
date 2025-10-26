@@ -2,8 +2,7 @@
 
 [ext_resource type="Script" uid="uid://4prsle13xee2" path="res://scripts/llm_api.gd" id="1_ldltu"]
 
-[node name="LlmApi" type="Node" unique_id=1934784916]
+[node name="LlmApi" type="Node"]
 script = ExtResource("1_ldltu")
-character_name = null
 
-[node name="HTTPRequest" type="HTTPRequest" parent="." unique_id=232334590]
+[node name="HTTPRequest" type="HTTPRequest" parent="."]
