@@ -22,7 +22,7 @@ scale = Vector2(0.59006214, 0.59006214)
 texture = ExtResource("3_kfhkg")
 
 [node name="Chatbubble" type="Sprite2D" parent="."]
-position = Vector2(852, 106)
+position = Vector2(800, 154)
 scale = Vector2(0.388, 0.388)
 texture = ExtResource("2_01hks")
 

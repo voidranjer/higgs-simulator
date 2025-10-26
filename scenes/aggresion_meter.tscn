@@ -1,6 +1,6 @@
-[gd_scene load_steps=6 format=3 uid="uid://husaqq5c35x2"]
+[gd_scene load_steps=7 format=3 uid="uid://husaqq5c35x2"]
 
-[ext_resource type="Script" uid="uid://d0o7iy2ic04br" path="res://scenes/aggresivebar.gd" id="1_7on02"]
+[ext_resource type="Script" uid="uid://d0o7iy2ic04br" path="res://scripts/aggression_meter.gd" id="1_7on02"]
 
 [sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_275ee"]
 
@@ -8,18 +8,23 @@
 bg_color = Color(0.66381943, 0, 0.07391628, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_i0h3e"]
-bg_color = Color(0.087975465, 0.09819723, 0.103537016, 1)
-expand_margin_left = 1.0
-expand_margin_top = 1.0
-expand_margin_right = 1.0
-expand_margin_bottom = 1.0
+bg_color = Color(0, 0, 0, 1)
+expand_margin_left = 3.0
+expand_margin_top = 3.0
+expand_margin_right = 3.0
+expand_margin_bottom = 3.0
 shadow_color = Color(0, 0, 0, 0.27450982)
 shadow_offset = Vector2(0, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_0wxar"]
 bg_color = Color(1, 1, 1, 1)
 
-[node name="Aggresivebar" type="ProgressBar"]
+[sub_resource type="LabelSettings" id="LabelSettings_dvind"]
+font_size = 24
+outline_size = 5
+outline_color = Color(0, 0, 0, 1)
+
+[node name="AggressionMeter" type="ProgressBar"]
 z_index = 1
 offset_right = 240.0
 offset_bottom = 4.0
@@ -29,7 +34,7 @@ value = 60.0
 show_percentage = false
 script = ExtResource("1_7on02")
 
-[node name="ProgressBar" type="ProgressBar" parent="."]
+[node name="DamageBar" type="ProgressBar" parent="."]
 z_index = -1
 layout_mode = 1
 anchors_preset = 15
@@ -45,5 +50,13 @@ show_percentage = false
 [node name="Timer" type="Timer" parent="."]
 wait_time = 0.4
 one_shot = true
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_top = -39.0
+offset_right = 203.0
+offset_bottom = -5.0
+text = "Aggression Meter"
+label_settings = SubResource("LabelSettings_dvind")
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
