@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://d2xhbt1by12m7"]
+[gd_scene load_steps=8 format=3 uid="uid://d2xhbt1by12m7"]
 
 [ext_resource type="PackedScene" uid="uid://farwc0kbsdbn" path="res://scenes/waltuh.tscn" id="1_0w3jm"]
 [ext_resource type="Script" uid="uid://dktdvc3wjvbfm" path="res://scripts/simulator.gd" id="1_5hxtd"]
@@ -6,6 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://b6d2tl05u3nla" path="res://assets/higgs_diner.png" id="3_33oco"]
 [ext_resource type="PackedScene" uid="uid://c24x2ul0ic5yg" path="res://scenes/llm_api.tscn" id="4_jtl1c"]
 [ext_resource type="PackedScene" uid="uid://bcxgjr12ha0ge" path="res://scenes/transcript_receiver.tscn" id="5_5x4kj"]
+[ext_resource type="AudioStream" uid="uid://bsqr8cqakfkx2" path="res://assets/fine_dining_bg.ogg" id="7_33oco"]
 
 [node name="Simulator" type="Node2D"]
 script = ExtResource("1_5hxtd")
@@ -27,3 +28,8 @@ position = Vector2(217, 18)
 character_name = "you"
 
 [node name="TranscriptReceiver" parent="." instance=ExtResource("5_5x4kj")]
+
+[node name="BGM" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_33oco")
+autoplay = true
+bus = &"BGM"
