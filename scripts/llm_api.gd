@@ -16,7 +16,7 @@ signal aggression_level_changed(new_level: int)
 @export var character_name: String = "you"
 
 # State variables
-var aggression_level: int = 10
+var aggression_level: int = 8
 var conversation_history: Array[String] = []
 var conversation = [
 	#{
