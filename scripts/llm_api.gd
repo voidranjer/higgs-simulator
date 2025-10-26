@@ -16,8 +16,19 @@ signal aggression_level_changed(new_level: int)
 @export var character_name: String = "you"
 
 # State variables
-var conversation_history: Array[String] = []
 var aggression_level: int = 10
+var conversation_history: Array[String] = []
+var conversation = [
+	#{
+		#"role": "user",
+		#"parts": [
+			#{
+				#"text": first_prompt
+			#}
+		#]
+	#}
+]
+var is_expecting_feedback: bool = false
 
 var sys_instr =  """	
 Your name is Walter. 
@@ -56,6 +67,8 @@ aggression_level can increase or decrease by steps of 3, 4, or 5 based on how af
         Give a clear, honest (but diplomatic) explanation.
 
         Offer a proactive, reasonable solution to make the wait more comfortable (e.g., "While you are first in line for the next table, can I please bring you and your partner a glass of champagne on the house?").
+	
+	At the end of the game, you will be asked to provide an evaluation on how well Murdock performed (as a third-party. Think of this as an evaluation on a recorded conversation). Set 'is_feedback_message' to true when providing such messages.
 """
 
 var first_prompt = """
@@ -65,63 +78,97 @@ You go up to Murdock at his host stand.
 Deliver your first line.
 """
 
+var feedback_sys_prompt = """# Employee Training Module: Handling an Angry Customer - Walter's 10th Anniversary Wait
+
+## Instruction
+
+- You are a third party employee performance evaluator.
+
+- Based on the following conversation record, identify which de-escalation techniques were used effectively by the employee and which could have been improved. Provide specific examples from the conversation to support your analysis.
+
+- Deliver your report formatted in BBCode.
+
+"""
+
 func prompt(waiter_line, aggr_lvl) -> String:
-	
 	return "Current aggression_level is " + str(aggr_lvl) + ". Murdock says \"" + waiter_line + "\"" + \
 '''
 	
 Deliver your voice_line, and provide your new aggression_level.
 '''
 
-var conversation = [
-	{
-		"role": "user",
-		"parts": [
-			{
-				"text": first_prompt
-			}
-		]
-	}
-]
+func interact(message: String):
+	var is_initial_message = message == "<|initial|>"
+	var is_feedback_message = message == "<|feedback|>"
+	
+	var body_dict
+	
+	if is_feedback_message:
+		is_expecting_feedback = true
 
-func interact(message='', first=false):
-	conversation_history.append("[employee] " + message)
-	conversation.append({
-		"role": "user",
-		"parts":[
-			{
-				"text": first_prompt if first else prompt(message, aggression_level)
+		body_dict = {
+			"system_instruction":{
+				"parts":[
+					{
+						"text": feedback_sys_prompt
+					}
+				]
+			},
+			"contents": {
+				"role": "user",
+				"parts":[
+					{
+						"text": "\nConversation Log:\n" + "\n".join(conversation_history) + "\nPlease generate your report in BBCode."
+					}
+				]
+			},
+			"generationConfig": {
+				"thinkingConfig": {
+					"thinkingBudget": 0 # disable reasoning for speed
+				},
 			}
-		]
-	})
-
-	var body_dict = {
-		"system_instruction":{
+		}
+	
+	else:
+		if not is_initial_message:
+			conversation_history.append("[employee] " + message)
+		
+		conversation.append({
+			"role": "user",
 			"parts":[
 				{
-					"text": sys_instr
+					"text": first_prompt if is_initial_message else prompt(message, aggression_level)
 				}
 			]
-		},
-		"contents": conversation,
-		"generationConfig": {
-			"thinkingConfig": {
-				"thinkingBudget": 0 # disable reasoning for speed
+		})
+
+		body_dict = {
+			"system_instruction":{
+				"parts":[
+					{
+						"text": sys_instr
+					}
+				]
 			},
-			"responseMimeType": "application/json",
-			"responseSchema": {
-				"type": "OBJECT",
-				"properties": {
-					#"is_game_over_good_ending": {"type": "BOOLEAN"},
-					#"is_game_over_bad_ending": {"type": "BOOLEAN"},
-					"voice_line": {"type": "STRING"},
-					"aggression_level": {"type": "INTEGER"},
+			"contents": conversation,
+			"generationConfig": {
+				"thinkingConfig": {
+					"thinkingBudget": 0 # disable reasoning for speed
+				},
+				"responseMimeType": "application/json",
+				"responseSchema": {
+					"type": "OBJECT",
+					"properties": {
+						#"is_game_over_good_ending": {"type": "BOOLEAN"},
+						#"is_game_over_bad_ending": {"type": "BOOLEAN"},
+						"voice_line": {"type": "STRING"},
+						"aggression_level": {"type": "INTEGER"},
+					}
 				}
 			}
 		}
-	}
+		
 	var body_json_string = JSON.stringify(body_dict)
-	
 	var headers = [
 		"Content-Type: application/json",
 		"x-goog-api-key: " + LLM_API_KEY # this is also injected by proxy
@@ -139,15 +186,23 @@ func _ready() -> void:
 
 func _on_request_completed(result, response_code, headers, body):
 	var response = JSON.parse_string(body.get_string_from_utf8())
-	var payload = JSON.parse_string(response["candidates"][0]["content"]["parts"][0]["text"])
+	var content = response["candidates"][0]["content"]["parts"][0]["text"]
+
+	if is_expecting_feedback:
+		print("FEEDBACK RECEIVED")
+		globals.feedback_bbcode = content
+		get_tree().change_scene_to_file("res://scenes/feedback_board.tscn")
+		return
+
+	var payload = JSON.parse_string(content)
 	aggression_level = payload.aggression_level
 	
-	conversation_history.append("[customer] {%s}" % payload.voice_line)
+	conversation_history.append("[customer] %s" % payload.voice_line)
 	conversation.append({
 		"role": "model",
 		"parts":[
 			{
-				"text": "Current aggression_level is "+str(aggression_level)+". " + payload.voice_line
+				"text": "Current aggression_level is " + str(aggression_level) + ". " + payload.voice_line
 			}
 		]
 	})

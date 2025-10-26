@@ -22,7 +22,7 @@ func _ready() -> void:
 	aggression_meter.init_health(10)
 	aggression_meter.health = 7
 	
-	llm_api.interact("", true)
+	llm_api.interact("<|initial|>")
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -33,4 +33,5 @@ func _process(delta: float) -> void:
 
 
 func _on_button_pressed() -> void:
-	get_tree().change_scene_to_file("res://scenes/video_stream_player.tscn")
+	llm_api.interact("<|feedback|>")
+	#get_tree().change_scene_to_file("res://scenes/video_stream_player.tscn")

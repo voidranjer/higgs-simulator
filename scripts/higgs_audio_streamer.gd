@@ -64,7 +64,7 @@ func _process(_delta):
 			print("HiggsApiStreamer: Connection closed or failed. Status: ", status)
 			is_streaming = false # Stop polling the network
 			http_client.close()
-			_add_silence(3.0)
+			_add_silence(1.5)
 			
 	# This section services the audio player's buffer.
 	# It runs independently of the network stream, as long as there is a valid

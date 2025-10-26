@@ -1,0 +1,39 @@
+[gd_scene load_steps=3 format=3 uid="uid://dfwq2gkx2q55x"]
+
+[ext_resource type="Script" uid="uid://bg0uunligfolr" path="res://scripts/feedback_board.gd" id="1_gib88"]
+[ext_resource type="VideoStream" uid="uid://1tur5lftbjpp" path="res://assets/slam.ogv" id="1_ta5gm"]
+
+[node name="FeedbackBoard" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_gib88")
+
+[node name="VideoStreamPlayer" type="VideoStreamPlayer" parent="."]
+layout_mode = 0
+offset_right = 1920.0
+offset_bottom = 1080.0
+scale = Vector2(0.6, 0.6)
+stream = ExtResource("1_ta5gm")
+autoplay = true
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 30
+theme_override_constants/margin_top = 30
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 30
+
+[node name="FeedbackText" type="RichTextLabel" parent="MarginContainer"]
+layout_mode = 2
+theme_override_colors/default_color = Color(0, 0, 0, 1)
+bbcode_enabled = true
+text = "PLACEHOLDER TEXT"
