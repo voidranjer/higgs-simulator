@@ -10,7 +10,7 @@ Auth:
   Set GOOGLE_APPLICATION_CREDENTIALS to your service-account JSON path.
 
 Env (optional, .env in same folder):
-  MESSAGE_ENDPOINT=http://localhost:8000/message
+  MESSAGE_ENDPOINT=http://localhost:9080/message
   LANGUAGE=en-US
   RATE=16000
 """
@@ -153,7 +153,7 @@ def main():
     load_dotenv()
 
     parser = argparse.ArgumentParser(description="Live transcription with Google Cloud STT; press Enter to stop")
-    parser.add_argument("--endpoint", default=os.getenv("MESSAGE_ENDPOINT", "http://localhost:8000/message"),
+    parser.add_argument("--endpoint", default=os.getenv("MESSAGE_ENDPOINT", "http://localhost:9080/message"),
                         help='HTTP endpoint to POST {"message": "..."}')
     parser.add_argument("--language", default=os.getenv("LANGUAGE", "en-US"),
                         help="BCP-47 code, e.g. en-US, fr-CA")
