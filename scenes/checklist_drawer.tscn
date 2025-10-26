@@ -57,7 +57,7 @@ text = "Show understanding, validate hesitations."
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
 button_mask = 0
-text = "Direct assessment of any immediate dangers."
+text = "Direct inquiry about any immediate dangers."
 
 [node name="ClipboardButton" type="Button" parent="."]
 anchors_preset = 2

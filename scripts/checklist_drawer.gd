@@ -6,6 +6,7 @@ extends CanvasLayer
 # Assign these in the Inspector by dragging the nodes
 @onready var menu_button: Button = $ClipboardButton
 @onready var checklist_panel: PanelContainer = $ChecklistPanel
+@onready var v_box_container: VBoxContainer = $ChecklistPanel/MarginContainer/VBoxContainer
 
 # --- Animation Properties ---
 @export var slide_duration: float = 0.5  # How long the slide takes in seconds
@@ -70,3 +71,9 @@ func slide_out() -> void:
 		offscreen_position,
 		slide_duration
 	).set_ease(Tween.EASE_IN).set_trans(Tween.TRANS_CUBIC)
+
+func set_checklist_values(checklist_vals):
+	for i in range(checklist_vals.size()):
+		var checkbox = v_box_container.get_child(i + 1) # Label is at idx 0
+		assert(checkbox is CheckBox, "Non checkbox found!")
+		checkbox.button_pressed = checklist_vals[i]

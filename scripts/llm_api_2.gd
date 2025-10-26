@@ -10,6 +10,7 @@ var LLM_API_KEY = ProjectSettings.get_setting("custom_apis/llm_api_key")
 
 # Signals
 signal message_received(response_text: String)
+signal checklist_updated(new_checklist: Array)
 
 # State variables
 var checklist_bools = [false, false, false, false, false]
@@ -66,7 +67,7 @@ direct_assessment: %s
 
 """ % checklist \
 + \
-"""Murdock says \"%\". Deliver your voice_line, and provide the updated boolean variables. 
+"""Murdock says \"%s\". Deliver your voice_line, and provide the updated boolean variables. 
 """ % helper_line
 
 func interact(message: String):
@@ -132,11 +133,19 @@ func _on_request_completed(result, response_code, headers, body):
 	var content = response["candidates"][0]["content"]["parts"][0]["text"]
 
 	var payload = JSON.parse_string(content)
-	checklist_bools = [payload.self_identify,
+	
+	var new_checklist_bools = [payload.self_identify,
 						payload.state_peace,
 						payload.state_concern,
 						payload.show_understanding,
 						payload.direct_assessment]
+						
+	# If not equal, open drawer
+	for i in range(new_checklist_bools.size()):
+		if new_checklist_bools[i] != checklist_bools[i]:
+			checklist_updated.emit(new_checklist_bools)
+			checklist_bools = new_checklist_bools
+			break
 	
 	conversation.append({
 		"role": "model",
@@ -154,6 +163,5 @@ direct_assessment: %s
 			}
 		]
 	})
-	print(conversation[-1])
 	
 	message_received.emit(payload.voice_line)

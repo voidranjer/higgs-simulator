@@ -4,3 +4,5 @@
 
 [node name="LlmApi2" type="Node"]
 script = ExtResource("1_apia2")
+
+[node name="HTTPRequest" type="HTTPRequest" parent="."]
