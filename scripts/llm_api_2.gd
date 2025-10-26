@@ -143,7 +143,8 @@ func _on_request_completed(result, response_code, headers, body):
 	# If not equal, open drawer
 	for i in range(new_checklist_bools.size()):
 		if new_checklist_bools[i] != checklist_bools[i]:
-			checklist_updated.emit(new_checklist_bools)
+			#checklist_updated.emit(new_checklist_bools)
+			checklist_updated.emit([true, true, true, true, true])
 			checklist_bools = new_checklist_bools
 			break
 	

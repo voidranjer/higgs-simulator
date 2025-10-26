@@ -6,6 +6,14 @@ extends Node2D
 @onready var checklist_drawer: CanvasLayer = $ChecklistDrawer
 
 func handle_checklist_update(new_checklist):
+	var all_trues = true
+	for i in range(new_checklist.size()):
+		if not new_checklist[i]:
+			all_trues = false
+			break
+	if all_trues:
+		get_tree().change_scene_to_file("res://scenes/morgan_dancing.tscn")
+	
 	checklist_drawer.set_checklist_values(new_checklist)
 	
 	# Pop open the drawer programatically
